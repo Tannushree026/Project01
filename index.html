@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Earthy Eats</title>
+  <style>
+    .quantity-popup-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+.quantity-popup-controls button {
+  background-color: #000000c9;
+  color: white;
+  border: none;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.nutrition-carousel {
+  position: relative;
+  width: 280px;
+  height: 200px;
+  margin-left: auto;
+  margin-right: 0;
+  margin-top: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background: white;
+}
+
+.carousel-images {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.carousel-img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  border-radius: 10px;
+}
+
+.carousel-img.active {
+  opacity: 1;
+}
+
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0,0,0,0.5);
+  border: none;
+  color: white;
+  font-size: 1.5em;
+  padding: 5px 10px;
+  cursor: pointer;
+  z-index: 10;
+  border-radius: 50%;
+}
+
+.carousel-arrow.prev {
+  left: 10px;
+}
+
+.carousel-arrow.next {
+  right: 10px;
+}
+
+@media (max-width: 900px) {
+  .nutrition-carousel {
+    margin: 20px auto 0;
+  }
+}
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #e7f0e6;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+     
+
+    }
+
+    header {
+      position: relative;
+      background-color: #000;
+      color: #fff;
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      border: 2px solid black;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    header img.logo-main {
+      height: 45px;
+      width: 45px;
+      border-radius: 50%;
+      border: 2px solid white;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2em;
+      font-family: 'Georgia', serif;
+      color: #fff;
+    }
+
+    .navbar-section {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-left: auto;
+      margin-right: 20px;
+    }
+
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-button {
+      background: none;
+      color: white;
+      font-size: 1em;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      font-weight: bold;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: white;
+      min-width: 200px;
+      box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+      z-index: 1;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .dropdown-content a {
+      color: black;
+      padding: 10px 14px;
+      text-decoration: none;
+      display: block;
+      transition: background-color 0.2s ease;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #e7f0e6;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    .basket-container {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .basket-container img {
+      height: 36px;
+      width: 36px;
+      filter: invert(100%);
+    }
+
+    .basket-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background-color: white;
+      color: black;
+      font-size: 0.75em;
+      padding: 2px 6px;
+      border-radius: 50%;
+      font-weight: bold;
+      display: none;
+      user-select: none;
+    }
+
+    .info-grid {
+      position: absolute;
+      top: 100px;
+      left: 20px;
+      width: 260px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      z-index: 5;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px;
+      box-sizing: border-box;
+      background-color: #e7f0e6;
+      
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      max-width: 400px;
+      width: 100%;
+      justify-items: center;
+    }
+
+    .grid-item {
+      background-color: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      text-align: center;
+      max-width: 350px;
+      width: 100%;
+    }
+
+    .grid-item img {
+      width: 100%;
+      border-radius: 8px;
+      height: auto;
+    }
+
+    .grid-item h2 {
+      margin: 15px 0 10px;
+      color: #333;
+      font-size: 1.4em;
+    }
+
+    .grid-item p {
+      color: #555;
+      font-size: 1em;
+    }
+
+    .stars {
+      margin-top: 10px;
+      font-size: 1.2em;
+    }
+
+    .star {
+      cursor: pointer;
+    }
+
+    .price-button {
+      margin-top: 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      font-size: 1.1em;
+      color: #333;
+      flex-wrap: wrap;
+    }
+
+    .price-button button {
+      background-color: #000000c9;
+      color: #fff;
+      border: 2px solid #fff;
+      padding: 10px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1em;
+      transition: all 0.3s ease;
+    }
+
+    .availability-section,
+    .coming-soon-section {
+      background-color: rgba(255, 255, 255, 0.95);
+      padding: 20px 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      font-size: 1em;
+      color: #333;
+    }
+
+    .availability-section h3,
+    .coming-soon-section h3 {
+      margin-top: 0;
+      margin-bottom: 15px;
+      font-family: 'Georgia', serif;
+      font-size: 1.5em;
+      text-align: center;
+    }
+
+    .availability-section ul,
+    .coming-soon-section ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .availability-section li,
+    .coming-soon-section li {
+      margin-bottom: 10px;
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .availability-section li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: #333;
+      font-weight: bold;
+    }
+
+    .coming-soon-section li::before {
+      content: "⌛";
+      position: absolute;
+      left: 0;
+      color: #2c5f2d;
+      font-weight: bold;
+    }
+
+    @media (max-width: 900px) {
+      .info-grid {
+        position: static;
+        width: 100%;
+        flex-direction: column;
+        margin-top: 10px;
+        padding: 0 20px;
+      }
+
+      main {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .grid-container {
+        max-width: 100%;
+      }
+
+      .navbar-section {
+        flex-direction: column;
+        gap: 10px;
+        margin: 10px 0;
+      }
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 1.5em;
+      }
+
+      header img.logo-main {
+        height: 40px;
+        width: 40px;
+        border: 2px solid white;
+      }
+
+      .basket-container img {
+        height: 30px;
+        width: 30px;
+      }
+
+      .price-button {
+        flex-direction: column;
+      }
+
+      .grid-item {
+        padding: 10px;
+      }
+    }
+    .basket-popup {
+  position: absolute;
+  top: 79px; /* adjusts the position below the basket icon */
+  right: 0px;
+  background-color: #ffffff;
+  border: 2px solid #333;
+  border-radius: 8px;
+  padding: 15px 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  width: 220px;
+  z-index: 10;
+  display: none;
+}
+
+.basket-popup h4 {
+  margin: 0 0 10px 0;
+  font-size: 1.1em;
+  font-family: 'Georgia', serif;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 5px;
+}
+
+.basket-subtotal {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  font-size: 1em;
+  color: #333;
+}
+main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: #e7f0e6;
+ 
+}
+
+.ad-carousel {
+  width: 300px;
+  height: 250px;
+  top:60px;
+  left: 100px;
+  position: relative;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  flex-shrink: 0;
+  background-color: #f9f9f9;
+}
+
+.carousel-slide {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.carousel-slide.active {
+  opacity: 1;
+  position: relative;
+}
+
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0,0,0,0.5);
+  border: none;
+  color: white;
+  font-size: 2em;
+  padding: 5px 10px;
+  cursor: pointer;
+  user-select: none;
+  border-radius: 50%;
+  z-index: 10;
+}
+
+.carousel-btn.prev {
+  left: 10px;
+}
+
+.carousel-btn.next {
+  right: 10px;
+}
+@media (max-width: 900px) {
+  main > div {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .reviews {
+    width: 100%;
+  }
+}
+
+@media (max-width: 900px) {
+  main {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .ad-carousel {
+    width: 100%;
+    max-width: 300px;
+    height: 200px;
+    margin-top: 20px;
+  }
+}
+.reviews {
+  width: 480px;
+  padding: 0 15px;
+  flex-shrink: 0;
+}
+
+    .review-carousel {
+  background: white;
+  border-radius: 10px;
+  width: 430px;
+  padding: 15px 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  min-height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: auto; /* center horizontally */
+  margin-right: auto;
+}
+
+    .carousel-controls {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .carousel-controls button {
+  flex: 1;
+  background-color: #000000c9;
+  border: none;
+  width: 100px;
+  color: white;
+  padding: 6px 10px; /* Reduced padding */
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85em; /* Smaller font */
+}
+.carousel-controls button:hover {
+  background-color: #000000c9; /* Same as default - disables hover color change */
+  color: white; /* Maintain consistent text color */
+}
+
+    form {
+      margin-top: 30px;
+      width: 100%;
+      max-width: 600px;
+      background: #f1f1f1;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+
+
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-left">
+      <img src="logo.jpg" alt="Earthy One Logo" class="logo-main" />
+      <h1>Earthy Eats</h1>
+    </div>
+
+    <div class="navbar-section">
+      <div class="dropdown">
+        <button class="dropdown-button">Available in Stores</button>
+        <div class="dropdown-content">
+          <a href="#">Tesco </a>
+          <a href="#">UCB Cafes</a>
+          <a href="#">Aldi</a>
+        </div>
+      </div>
+
+      <div class="dropdown">
+        <button class="dropdown-button">Available on Online Sites</button>
+        <div class="dropdown-content">
+          <a href="#">Uber Eats</a>
+          <a href="#">Just Eat</a>
+          <a href="#">Deliveroo</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="basket-container" id="basket-container" title="Basket">
+      <img src="https://cdn-icons-png.flaticon.com/512/263/263142.png" alt="Basket Icon" />
+      <div class="basket-badge" id="basket-badge">0</div>
+    </div>
+  
+
+
+    <div class="info-grid">
+      <section class="coming-soon-section" aria-label="Coming Soon Wraps">
+        <h3 style="background: #ea444487;">Coming Soon Wraps</h3>
+        <ul>
+          <li>
+            Gluten-Free Veggie Wrap<br />
+            <img src="c3.jpeg" alt="Spicy Chickpea Wrap" style="width: 100%; border-radius: 6px; margin-top: 5px;" />
+          </li>
+          <li>
+            Vegan Veggie Wrap<br />
+            <img src="c3.jpeg" alt="BBQ Jackfruit Wrap" style="width: 100%; border-radius: 6px; margin-top: 5px;" />
+          </li>
+        </ul>
+      </section>
+    </div>
+  </header>
+
+<div class="basket-popup" id="basket-popup">
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+  <h4>Your Basket</h4>
+  <button id="close-popup" style="background: none; border: none; font-size: 1.4em; cursor: pointer;">×</button>
+</div>
+
+<div id="merchandise-section" style="margin-top: 10px; font-size: 0.9em; border: 1px dashed #ccc; padding: 10px; border-radius: 8px;">
+  <h4 style="margin: 0 0 10px; font-size: 1em;">🎁 On 5 Items get a free Diary, on 7 get a Cap, on 10 get a Sipper</h4>
+  <div id="merchandise-progress">
+    <!-- Dynamic content will go here -->
+  </div>
+</div>
+
+<h4 style="margin-top: 15px;">Your Order</h4>
+ 
+  <div id="basket-items" style="margin-bottom: 10px;">
+  <!-- Basket items with image will be added here -->
+</div>
+<div class="basket-subtotal">
+  <span>Subtotal:</span>
+  <span id="subtotal-amount">£0.00</span>
+</div>
+<button id="checkout-button" style="margin-top: 12px; background-color: #000000c9; color: white; padding: 10px 15px; border: none; border-radius: 6px; cursor: pointer; width: 100%; font-weight: bold;">
+  Checkout
+</button>
+</div>
+</div>
+  <main>
+    <div style="padding: 100px;"></div>
+    
+    <div class="grid-container">
+      <div class="grid-item">
+        <img src="https://static.vecteezy.com/system/resources/thumbnails/054/159/185/small/fresh-vegetable-wraps-with-colorful-ingredients-served-on-a-wooden-board-in-a-cozy-kitchen-setting-photo.jpeg" alt="Veggie Wrap" />
+        <h2 style="background: #78ea44b5;">Veggie-Loaded <br/>Paneer Wrap</h2>
+        <p>A fresh and colorful blend of vegetables wrapped in a soft tortilla—perfect for a healthy and satisfying meal.</p>
+        <div class="stars" id="star-rating">
+          <span class="star" data-value="1">★</span>
+          <span class="star" data-value="2">★</span>
+          <span class="star" data-value="3">★</span>
+          <span class="star" data-value="4">★</span>
+          <span class="star" data-value="5">★</span>
+          <span id="review-count" style="margin-left: 10px; font-size: 0.9em; color: #555;">3 reviews</span>
+        </div>
+
+        <div class="price-button" id="price-button-container">
+          <span>£5.99</span>
+          <div id="quantity-controls" style="display: flex; align-items: center; gap: 10px;">
+            <button id="decrease-qty" style="display:none;">-</button>
+            <span id="quantity" style="font-weight: bold; display: none;">0</span>
+            <button id="increase-qty" style="display:none;">+</button>
+            <button id="add-to-basket">ADD TO BASKET</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="padding: 30px;"></div>
+   <div class="reviews">
+     <form  style="margin-top: 30px;">
+    <div style="background-color: #f1f1f1;">
+  <h3 style="text-align: center;">Customer Reviews</h3>
+  <div class="review-carousel" id="reviewDisplay"></div>
+</div>
+</form>
+
+
+
+  <!-- Add Review Form -->
+  <form onsubmit="submitReview(event)" style="margin-top: 30px;">
+    <h3 style="text-align: center;">Leave Your Review</h3>
+    <input type="text" id="name" placeholder="Your Name" required style="width: 450px; padding: 10px; margin-bottom: 10px; border-radius: 6px; border: 1px solid #ccc;" />
+    <textarea id="message" rows="4" placeholder="Your Review" required style="width: 450px; padding: 10px; margin-bottom: 10px; border-radius: 6px; border: 1px solid #ccc;"></textarea>
+    <button type="submit" style="width: 100%; padding: 12px; background-color: #000000c9; color: white; border: none; border-radius: 6px; font-weight: bold;">Submit Review</button>
+  </form>
+</div>
+
+  </main>
+<hr style="border: none; height: 0.5px; background-color: black; margin: 0;">
+
+<section style="padding: 30px 20px; background-color: #e7f0e6;">
+  <h2 style="text-align: left; font-family: 'Georgia', serif; color: #333;">
+    Nutritional Information <br>
+    <span style="font-size: 0.9em; font-weight: normal;">(approximate values per 200 g portion)</span>
+    <div class="nutrition-carousel">
+  <div class="carousel-images">
+    <img src="a1.jpeg" class="carousel-img active" alt="Nutrition 1">
+    <img src="a2.jpeg" class="carousel-img" alt="Nutrition 2">
+    <img src="a3.jpeg" class="carousel-img" alt="Nutrition 3">
+    <img src="a4.jpeg" class="carousel-img" alt="Nutrition 4">
+  </div>
+  <button class="carousel-arrow prev" onclick="prevNutrition()">‹</button>
+  <button class="carousel-arrow next" onclick="nextNutrition()">›</button>
+</div>
+
+  </h2>
+
+  <div style="display: flex; justify-content: left; flex-wrap: wrap; gap: 15px; margin-top: 20px;">
+    <div style="background-color: rgb(247, 72, 72); border: 1px solid #ccc; padding: 12px 20px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: bold;">Energy<br> ~390-420g</div>
+    <div style="background-color: rgb(241, 125, 23); border: 1px solid #ccc; padding: 12px 20px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: bold;">Protein<br> ~12-14g</div>
+    <div style="background-color:  rgb(247, 72, 72); border: 1px solid #ccc; padding: 12px 20px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: bold;">Carbohydrates<br> ~35-40g</div>
+    <div style="background-color: rgb(241, 125, 23); border: 1px solid #ccc; padding: 12px 20px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: bold;">Sugars<br> ~6-8g</div>
+    <div style="background-color:  rgb(247, 72, 72); border: 1px solid #ccc; padding: 12px 20px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-weight: bold;">Fat<br> ~20-22g</div>
+    
+  </div>
+  
+</section>
+<hr style="border: none; height: 1px; background-color: black; margin: 0;">
+<h2 style="text-align: left; font-family: 'Georgia', serif; padding: 0px 20px; ;color: #333;">
+    Allergens 
+  </h2>
+  <span style="text-align: left; font-family: 'Georgia', serif; padding: 0px 20px; ;color: #333;">
+    Contains GLUTEN, MILK, MUSTARD <br> Includes honey - not suitable for vegans. 
+  </span><br>
+  <hr style="border: none; height: 1px; background-color: black; margin: 0;">
+  <h2 style="text-align: left; font-family: 'Georgia', serif; padding: 0px 20px; ;color: #333;">
+  Storage & Shelf Life</h2>
+   <span style="text-align: left; font-family: 'Georgia', serif; padding: 0px 20px; ;color: #333;">
+    Keep refrigerated below 5°C. Once opened, consume within 24 hours. Not suitable for freezing.
+    Best consumed within 3 days of preparation. Use by the date indicated on the packaging for optimal freshness.
+    </span>
+  <br>
+  <script>
+    const reviews = [
+      "<strong>Alex:</strong> Absolutely loved it! Fresh and tasty.",
+      "<strong>Samantha:</strong> A perfect light lunch. Will order again.",
+      "<strong>Jordan:</strong> The wrap was delicious and filling. Highly recommend!"
+    ];
+    let currentReview = 0;
+
+    function displayReview() {
+      const reviewEl = document.getElementById("reviewDisplay");
+      reviewEl.innerHTML = reviews[currentReview];
+    }
+
+    function nextReview() {
+      currentReview = (currentReview + 1) % reviews.length;
+      displayReview();
+    }
+
+    function prevReview() {
+      currentReview = (currentReview - 1 + reviews.length) % reviews.length;
+      displayReview();
+    }
+
+    setInterval(nextReview, 5000);
+    displayReview();
+
+    function submitReview(event) {
+  event.preventDefault();
+  const name = document.getElementById("name").value.trim();
+  const message = document.getElementById("message").value.trim();
+
+  if (name && message) {
+    reviews.push(`<strong>${name}:</strong> ${message}`);
+    currentReview = reviews.length - 1; // Show latest review
+    displayReview();
+    document.getElementById("name").value = "";
+    document.getElementById("message").value = "";
+  }
+}
+
+
+
+  let quantity = 0; // Declare first
+
+const itemPrice = 5.99;
+const basketIcon = document.getElementById('basket-container');
+const basketPopup = document.getElementById('basket-popup');
+const subtotalAmount = document.getElementById('subtotal-amount');
+const basketBadge = document.getElementById('basket-badge');
+const addToBasketBtn = document.getElementById('add-to-basket');
+const increaseQtyBtn = document.getElementById('increase-qty');
+const decreaseQtyBtn = document.getElementById('decrease-qty');
+const quantitySpan = document.getElementById('quantity');
+const basketItems = document.getElementById('basket-items');
+
+const merchandiseImages = {
+  m1: 'm1.jpeg',
+  m2: 'm2.jpeg',
+  m3: 'm3.jpeg',
+};
+
+function updateBasketBadge() {
+  if (quantity > 0) {
+    basketBadge.textContent = quantity;
+    basketBadge.style.display = 'block';
+  } else {
+    basketBadge.style.display = 'none';
+  }
+}
+
+function showQuantityControls(show) {
+  if (show) {
+    addToBasketBtn.style.display = 'none';
+    increaseQtyBtn.style.display = 'inline-block';
+    decreaseQtyBtn.style.display = 'inline-block';
+    quantitySpan.style.display = 'inline-block';
+    quantitySpan.textContent = quantity;
+  } else {
+    addToBasketBtn.style.display = 'inline-block';
+    increaseQtyBtn.style.display = 'none';
+    decreaseQtyBtn.style.display = 'none';
+    quantitySpan.style.display = 'none';
+    quantitySpan.textContent = 0;
+  }
+}
+
+function addFreeItem(container, name, imageSrc) {
+  const freeItem = document.createElement('div');
+  freeItem.style.display = 'flex';
+  freeItem.style.alignItems = 'center';
+  freeItem.style.gap = '10px';
+  freeItem.style.marginBottom = '8px';
+
+  const img = document.createElement('img');
+  img.src = imageSrc;
+  img.alt = name;
+  img.style.width = '40px';
+  img.style.height = '40px';
+  img.style.borderRadius = '6px';
+  img.style.objectFit = 'cover';
+
+  const details = document.createElement('div');
+  details.innerHTML = `<strong>${name}</strong><br>£0.00`;
+  details.style.fontSize = '0.9em';
+
+  freeItem.appendChild(img);
+  freeItem.appendChild(details);
+  container.appendChild(freeItem);
+}
+
+function renderBasketPopup() {
+  basketItems.innerHTML = '';
+  const merchProgress = document.getElementById('merchandise-progress');
+  merchProgress.innerHTML = '';
+
+  const merchTiers = [
+    { threshold: 5, name: 'Diary', img: merchandiseImages.m1 },
+    { threshold: 7, name: 'Cap', img: merchandiseImages.m2 },
+    { threshold: 10, name: 'Sipper', img: merchandiseImages.m3 },
+  ];
+
+  merchTiers.forEach(tier => {
+    const remaining = tier.threshold - quantity;
+    const merchInfo = document.createElement('div');
+    merchInfo.style.marginBottom = '8px';
+
+    if (quantity >= tier.threshold) {
+      merchInfo.innerHTML = `<strong>✅ ${tier.name} unlocked!</strong> <img src="${tier.img}" style="height: 30px; vertical-align: middle; border-radius: 4px; margin-left: 5px;" />`;
+    } else {
+      merchInfo.innerHTML = `Add <strong>${remaining}</strong> more item(s) to get a free <strong>${tier.name}</strong> 
+      <img src="${tier.img}" style="height: 30px; vertical-align: middle; border-radius: 4px; margin-left: 5px;" />`;
+    }
+    merchProgress.appendChild(merchInfo);
+  });
+
+  if (quantity > 0) {
+    const itemContainer = document.createElement('div');
+    itemContainer.style.display = 'flex';
+    itemContainer.style.flexDirection = 'column';
+    itemContainer.style.alignItems = 'center';
+    itemContainer.style.gap = '10px';
+
+    const topRow = document.createElement('div');
+    topRow.style.display = 'flex';
+    topRow.style.alignItems = 'center';
+    topRow.style.gap = '10px';
+
+    const img = document.createElement('img');
+    img.src = "https://static.vecteezy.com/system/resources/thumbnails/054/159/185/small/fresh-vegetable-wraps-with-colorful-ingredients-served-on-a-wooden-board-in-a-cozy-kitchen-setting-photo.jpeg";
+    img.style.width = '50px';
+    img.style.height = '50px';
+    img.style.borderRadius = '6px';
+    img.style.objectFit = 'cover';
+
+    const detail = document.createElement('div');
+    detail.innerHTML = `<strong>Veggie Wrap</strong><br>£${(itemPrice * quantity).toFixed(2)}`;
+    detail.style.fontSize = '0.95em';
+
+    topRow.appendChild(img);
+    topRow.appendChild(detail);
+
+    const controls = document.createElement('div');
+    controls.className = 'quantity-popup-controls';
+
+    const minus = document.createElement('button');
+    minus.textContent = '-';
+    minus.onclick = () => {
+      if (quantity > 1) {
+        quantity--;
+      } else {
+        quantity = 0;
+        showQuantityControls(false);
+        basketPopup.style.display = 'none';
+      }
+      updateBasketBadge();
+      renderBasketPopup();
+    };
+
+    const plus = document.createElement('button');
+    plus.textContent = '+';
+    plus.onclick = () => {
+      quantity++;
+      updateBasketBadge();
+      renderBasketPopup();
+    };
+
+    const qtyDisplay = document.createElement('span');
+    qtyDisplay.textContent = quantity;
+
+    controls.appendChild(minus);
+    controls.appendChild(qtyDisplay);
+    controls.appendChild(plus);
+
+    itemContainer.appendChild(topRow);
+    itemContainer.appendChild(controls);
+    basketItems.appendChild(itemContainer);
+
+    if (quantity >= 5) addFreeItem(basketItems, 'Diary', merchandiseImages.m1);
+    if (quantity >= 7) addFreeItem(basketItems, 'Cap', merchandiseImages.m2);
+    if (quantity >= 10) addFreeItem(basketItems, 'Sipper', merchandiseImages.m3);
+  }
+
+  subtotalAmount.textContent = `£${(itemPrice * quantity).toFixed(2)}`;
+}
+
+// Show basket popup
+basketIcon.addEventListener('click', () => {
+  renderBasketPopup();
+  basketPopup.style.display = 'block';
+});
+document.getElementById('close-popup').addEventListener('click', () => {
+  basketPopup.style.display = 'none';
+});
+
+// Initial setup
+updateBasketBadge();
+showQuantityControls(false);
+addToBasketBtn.addEventListener('click', () => {
+  quantity = 1;
+  updateBasketBadge();
+  showQuantityControls(true);
+  renderBasketPopup();
+  basketPopup.style.display = 'block'; // optional
+});
+document.getElementById('checkout-button').addEventListener('click', () => {
+  // Clear quantity
+  quantity = 0;
+
+  // Update UI
+  updateBasketBadge();
+  showQuantityControls(false);
+
+  // Replace basket popup content with thank-you message
+  basketPopup.innerHTML = `
+    <div style="text-align: center; padding: 20px;">
+      <h3 style="color: green;">Thank you for your order!</h3>
+      <p style="margin-top: 10px; font-style: italic;">
+        Your order is placed.<br/>
+        Come again soon 😊<br/>
+        <span style="display: block; margin-top: 10px;">
+          <strong>Never hurt a Wrap by saying No.<br/>
+          They too have fillings inside.</strong>
+        </span>
+      </p>
+    </div>
+  `;
+
+  // Optionally hide after few seconds
+  setTimeout(() => {
+    basketPopup.style.display = 'none';
+  }, 6000); // closes after 6 seconds
+});
+let currentNutritionIndex = 0;
+const nutritionImages = document.querySelectorAll('.carousel-img');
+
+function showNutritionImage(index) {
+  nutritionImages.forEach((img, i) => {
+    img.classList.toggle('active', i === index);
+  });
+}
+
+function nextNutrition() {
+  currentNutritionIndex = (currentNutritionIndex + 1) % nutritionImages.length;
+  showNutritionImage(currentNutritionIndex);
+}
+
+function prevNutrition() {
+  currentNutritionIndex = (currentNutritionIndex - 1 + nutritionImages.length) % nutritionImages.length;
+  showNutritionImage(currentNutritionIndex);
+}
+
+  </script>
+</body>
+</html>
